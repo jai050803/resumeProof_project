@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ResumeProof — Wireframe Demo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --rp-black: #0D0D0F;
+    --rp-surface: #141416;
+    --rp-panel: #1C1C20;
+    --rp-border: #2A2A30;
+    --rp-accent: #5B6EF5;
+    --rp-accent-soft: rgba(91,110,245,0.12);
+    --rp-green: #22C55E;
+    --rp-red: #EF4444;
+    --rp-amber: #F59E0B;
+    --rp-text: #E8E8F0;
+    --rp-muted: #6B6B80;
+    --rp-mono: 'IBM Plex Mono', monospace;
+    --rp-sans: 'Inter', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--rp-black); color: var(--rp-text); font-family: var(--rp-sans); min-height: 100vh; }
+
+  /* ── NAV ── */
+  .nav { background: var(--rp-surface); border-bottom: 1px solid var(--rp-border); padding: 0 24px; height: 56px; display: flex; align-items: center; gap: 32px; position: sticky; top: 0; z-index: 50; }
+  .nav-logo { font-family: var(--rp-mono); font-size: 15px; font-weight: 600; color: var(--rp-text); letter-spacing: -0.3px; }
+  .nav-logo span { color: var(--rp-accent); }
+  .nav-tabs { display: flex; gap: 4px; margin-left: 24px; }
+  .nav-tab { font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 6px; cursor: pointer; color: var(--rp-muted); border: 1px solid transparent; transition: all 0.15s; white-space: nowrap; }
+  .nav-tab:hover { color: var(--rp-text); background: var(--rp-panel); }
+  .nav-tab.active { color: var(--rp-text); background: var(--rp-accent-soft); border-color: var(--rp-accent); }
+  .nav-badge { font-family: var(--rp-mono); font-size: 10px; background: var(--rp-accent-soft); color: var(--rp-accent); border: 1px solid var(--rp-accent); padding: 2px 8px; border-radius: 4px; margin-left: auto; }
+
+  /* ── LAYOUT ── */
+  .page { display: none; padding: 32px 24px; max-width: 1200px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ── CARDS ── */
+  .card { background: var(--rp-panel); border: 1px solid var(--rp-border); border-radius: 10px; padding: 24px; }
+  .card-sm { background: var(--rp-panel); border: 1px solid var(--rp-border); border-radius: 8px; padding: 16px; }
+
+  /* ── STAT ROW ── */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--rp-panel); border: 1px solid var(--rp-border); border-radius: 10px; padding: 20px; }
+  .stat-label { font-size: 11px; font-weight: 500; color: var(--rp-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .stat-value { font-family: var(--rp-mono); font-size: 28px; font-weight: 600; color: var(--rp-text); line-height: 1; }
+  .stat-delta { font-size: 11px; color: var(--rp-green); margin-top: 6px; }
+
+  /* ── TABLE ── */
+  .rp-table { width: 100%; border-collapse: collapse; }
+  .rp-table th { text-align: left; font-size: 11px; font-weight: 500; color: var(--rp-muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 16px; border-bottom: 1px solid var(--rp-border); }
+  .rp-table td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid rgba(42,42,48,0.6); vertical-align: middle; }
+  .rp-table tr:last-child td { border-bottom: none; }
+  .rp-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+  /* ── BADGES ── */
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+  .badge-green { background: rgba(34,197,94,0.1); color: var(--rp-green); border: 1px solid rgba(34,197,94,0.2); }
+  .badge-red { background: rgba(239,68,68,0.1); color: var(--rp-red); border: 1px solid rgba(239,68,68,0.2); }
+  .badge-amber { background: rgba(245,158,11,0.1); color: var(--rp-amber); border: 1px solid rgba(245,158,11,0.2); }
+  .badge-blue { background: var(--rp-accent-soft); color: var(--rp-accent); border: 1px solid rgba(91,110,245,0.25); }
+  .badge-dot::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* ── BUTTONS ── */
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; padding: 8px 18px; border-radius: 7px; cursor: pointer; border: none; transition: all 0.15s; font-family: var(--rp-sans); }
+  .btn-primary { background: var(--rp-accent); color: #fff; }
+  .btn-primary:hover { background: #4a5de0; }
+  .btn-outline { background: transparent; color: var(--rp-text); border: 1px solid var(--rp-border); }
+  .btn-outline:hover { background: var(--rp-panel); }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-danger { background: rgba(239,68,68,0.1); color: var(--rp-red); border: 1px solid rgba(239,68,68,0.2); }
+
+  /* ── FORM ── */
+  .form-label { font-size: 12px; font-weight: 500; color: var(--rp-muted); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-input { width: 100%; background: var(--rp-black); border: 1px solid var(--rp-border); border-radius: 7px; padding: 10px 14px; font-size: 13px; color: var(--rp-text); font-family: var(--rp-sans); outline: none; transition: border-color 0.15s; }
+  .form-input:focus { border-color: var(--rp-accent); }
+  .form-input::placeholder { color: var(--rp-muted); }
+  textarea.form-input { resize: vertical; min-height: 80px; }
+
+  /* ── UPLOAD ZONE ── */
+  .upload-zone { border: 2px dashed var(--rp-border); border-radius: 10px; padding: 32px; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--rp-accent); background: var(--rp-accent-soft); }
+  .upload-icon { font-size: 32px; margin-bottom: 10px; }
+  .upload-text { font-size: 13px; color: var(--rp-muted); }
+  .upload-hint { font-size: 11px; color: var(--rp-muted); margin-top: 4px; }
+
+  /* ── SCORE RING ── */
+  .score-ring-wrap { position: relative; width: 96px; height: 96px; }
+  .score-ring-wrap svg { transform: rotate(-90deg); }
+  .score-number { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--rp-mono); font-size: 22px; font-weight: 600; }
+
+  /* ── PROGRESS BAR ── */
+  .prog-bar { background: var(--rp-border); border-radius: 4px; height: 6px; overflow: hidden; }
+  .prog-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+  .prog-green { background: var(--rp-green); }
+  .prog-blue { background: var(--rp-accent); }
+  .prog-amber { background: var(--rp-amber); }
+  .prog-red { background: var(--rp-red); }
+
+  /* ── CODE BLOCK ── */
+  .code-block { background: var(--rp-black); border: 1px solid var(--rp-border); border-radius: 8px; padding: 16px 20px; font-family: var(--rp-mono); font-size: 12px; color: #A8B4FF; overflow-x: auto; line-height: 1.7; }
+  .code-comment { color: var(--rp-muted); }
+  .code-key { color: #FF8585; }
+  .code-str { color: #A8FF85; }
+  .code-fn { color: #85D4FF; }
+
+  /* ── WIDGET PREVIEW ── */
+  .widget-shell { background: #fff; border-radius: 12px; padding: 24px; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .widget-title { font-size: 16px; font-weight: 700; color: #0D0D0F; margin-bottom: 4px; }
+  .widget-sub { font-size: 12px; color: #6B6B80; margin-bottom: 20px; }
+  .widget-label { font-size: 11px; font-weight: 600; color: #374151; margin-bottom: 5px; display: block; }
+  .widget-input { width: 100%; border: 1.5px solid #E5E7EB; border-radius: 7px; padding: 9px 13px; font-size: 13px; color: #0D0D0F; font-family: var(--rp-sans); outline: none; margin-bottom: 14px; }
+  .widget-input:focus { border-color: #5B6EF5; }
+  .widget-upload { border: 2px dashed #E5E7EB; border-radius: 9px; padding: 20px; text-align: center; cursor: pointer; margin-bottom: 14px; transition: all 0.2s; }
+  .widget-upload:hover { border-color: #5B6EF5; background: #F5F6FF; }
+  .widget-btn { width: 100%; background: #5B6EF5; color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--rp-sans); transition: background 0.15s; }
+  .widget-btn:hover { background: #4A5DE0; }
+  .widget-footer { font-size: 10px; color: #9CA3AF; text-align: center; margin-top: 14px; }
+  .widget-footer a { color: #5B6EF5; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--rp-border); }
+  .tl-item { position: relative; margin-bottom: 20px; }
+  .tl-dot { position: absolute; left: -24px; top: 3px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--rp-border); background: var(--rp-panel); }
+  .tl-dot.done { background: var(--rp-green); border-color: var(--rp-green); }
+  .tl-dot.active { background: var(--rp-accent); border-color: var(--rp-accent); box-shadow: 0 0 0 4px var(--rp-accent-soft); }
+  .tl-dot.pending { background: var(--rp-panel); }
+  .tl-label { font-size: 13px; font-weight: 500; color: var(--rp-text); }
+  .tl-meta { font-size: 11px; color: var(--rp-muted); margin-top: 2px; font-family: var(--rp-mono); }
+
+  /* ── API KEY FIELD ── */
+  .apikey-row { display: flex; align-items: center; gap: 10px; background: var(--rp-black); border: 1px solid var(--rp-border); border-radius: 8px; padding: 10px 14px; }
+  .apikey-value { font-family: var(--rp-mono); font-size: 13px; color: var(--rp-muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ── SECTION HEADER ── */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .section-title { font-size: 16px; font-weight: 600; color: var(--rp-text); }
+  .section-sub { font-size: 12px; color: var(--rp-muted); margin-top: 2px; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--rp-border); margin: 24px 0; }
+
+  /* ── TABS (inner) ── */
+  .inner-tabs { display: flex; gap: 2px; background: var(--rp-black); border: 1px solid var(--rp-border); padding: 4px; border-radius: 8px; width: fit-content; margin-bottom: 24px; }
+  .inner-tab { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 5px; cursor: pointer; color: var(--rp-muted); transition: all 0.15s; }
+  .inner-tab.active { color: var(--rp-text); background: var(--rp-panel); }
+
+  /* ── FLAG ITEM ── */
+  .flag-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--rp-black); border: 1px solid var(--rp-border); border-radius: 8px; margin-bottom: 10px; }
+  .flag-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .flag-title { font-size: 13px; font-weight: 500; color: var(--rp-text); }
+  .flag-desc { font-size: 12px; color: var(--rp-muted); margin-top: 3px; }
+
+  /* ── TOAST ── */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--rp-panel); border: 1px solid var(--rp-border); border-radius: 10px; padding: 14px 18px; font-size: 13px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); z-index: 9999; transform: translateY(80px); opacity: 0; transition: all 0.3s ease; max-width: 320px; display: flex; align-items: center; gap: 10px; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow-box { background: var(--rp-panel); border: 1px solid var(--rp-border); border-radius: 8px; padding: 10px 16px; font-size: 12px; font-weight: 500; text-align: center; }
+  .flow-arrow { font-size: 16px; color: var(--rp-muted); text-align: center; }
+  .flow-label { font-size: 10px; color: var(--rp-muted); text-align: center; font-family: var(--rp-mono); }
+
+  /* ── LOADING PULSE ── */
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .pulse { animation: pulse 1.5s ease infinite; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--rp-border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">Resume<span>Proof</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="showPage('widget')">Widget Preview</button>
+    <button class="nav-tab" onclick="showPage('results')">Verification Results</button>
+    <button class="nav-tab" onclick="showPage('settings')">API Keys & Docs</button>
+    <button class="nav-tab" onclick="showPage('flow')">Architecture Flow</button>
+  </div>
+  <div class="nav-badge">Wireframe Demo v0.1</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: DASHBOARD                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+  <div class="section-header" style="margin-bottom:28px">
+    <div>
+      <div class="section-title" style="font-size:22px">KRMC Placement Portal</div>
+      <div class="section-sub">Hiring dashboard · Last sync 2 min ago</div>
+    </div>
+    <button class="btn btn-primary" onclick="showToast('✅ Export ready — check your email')">Export Report</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Submitted</div>
+      <div class="stat-value">247</div>
+      <div class="stat-delta">↑ 18 this week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Verified ✓</div>
+      <div class="stat-value" style="color:var(--rp-green)">189</div>
+      <div class="stat-delta">76.5% pass rate</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Flagged ⚠</div>
+      <div class="stat-value" style="color:var(--rp-amber)">41</div>
+      <div class="stat-delta">Manual review needed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Rejected ✗</div>
+      <div class="stat-value" style="color:var(--rp-red)">17</div>
+      <div class="stat-delta">Fabricated projects detected</div>
+    </div>
+  </div>
+
+  <!-- Recent Submissions -->
+  <div class="card">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Recent Submissions</div>
+        <div class="section-sub">Click a row to view full verification report</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="form-input" style="width:200px;padding:7px 12px" placeholder="Search name or role…" />
+        <button class="btn btn-outline btn-sm">Filter</button>
+      </div>
+    </div>
+    <table class="rp-table">
+      <thead>
+        <tr>
+          <th>Candidate</th>
+          <th>GitHub</th>
+          <th>Role Applied</th>
+          <th>Confidence</th>
+          <th>Status</th>
+          <th>Submitted</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="cursor:pointer" onclick="showPage('results')">
+          <td>
+            <div style="font-weight:500">Arjun Mehra</div>
+            <div style="font-size:11px;color:var(--rp-muted)">arjun.mehra@iit.ac.in</div>
+          </td>
+          <td><span style="font-family:var(--rp-mono);font-size:12px;color:var(--rp-accent)">arjun-gh</span></td>
+          <td>Backend Engineer</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-family:var(--rp-mono);font-size:13px;font-weight:600;color:var(--rp-green)">91%</span>
+              <div style="width:60px"><div class="prog-bar"><div class="prog-fill prog-green" style="width:91%"></div></div></div>
+            </div>
+          </td>
+          <td><span class="badge badge-green"><span class="badge-dot"></span>Verified</span></td>
+          <td style="font-size:12px;color:var(--rp-muted)">12 Jul 2026</td>
+          <td><button class="btn btn-outline btn-sm">View →</button></td>
+        </tr>
+        <tr style="cursor:pointer" onclick="showPage('results')">
+          <td>
+            <div style="font-weight:500">Priya Krishnan</div>
+            <div style="font-size:11px;color:var(--rp-muted)">priya.k@nit.edu</div>
+          </td>
+          <td><span style="font-family:var(--rp-mono);font-size:12px;color:var(--rp-accent)">priya-codes</span></td>
+          <td>Full Stack Dev</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-family:var(--rp-mono);font-size:13px;font-weight:600;color:var(--rp-amber)">62%</span>
+              <div style="width:60px"><div class="prog-bar"><div class="prog-fill prog-amber" style="width:62%"></div></div></div>
+            </div>
+          </td>
+          <td><span class="badge badge-amber"><span class="badge-dot"></span>Flagged</span></td>
+          <td style="font-size:12px;color:var(--rp-muted)">12 Jul 2026</td>
+          <td><button class="btn btn-outline btn-sm">View →</button></td>
+        </tr>
+        <tr>
+          <td>
+            <div style="font-weight:500">Rohan Das</div>
+            <div style="font-size:11px;color:var(--rp-muted)">rohan.d@bits.ac.in</div>
+          </td>
+          <td><span style="font-family:var(--rp-mono);font-size:12px;color:var(--rp-accent)">rohan-d</span></td>
+          <td>ML Engineer</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-family:var(--rp-mono);font-size:13px;font-weight:600;color:var(--rp-red)">28%</span>
+              <div style="width:60px"><div class="prog-bar"><div class="prog-fill prog-red" style="width:28%"></div></div></div>
+            </div>
+          </td>
+          <td><span class="badge badge-red"><span class="badge-dot"></span>Rejected</span></td>
+          <td style="font-size:12px;color:var(--rp-muted)">11 Jul 2026</td>
+          <td><button class="btn btn-outline btn-sm">View →</button></td>
+        </tr>
+        <tr>
+          <td>
+            <div style="font-weight:500">Sneha Patel</div>
+            <div style="font-size:11px;color:var(--rp-muted)">sneha.p@vit.edu</div>
+          </td>
+          <td><span style="font-family:var(--rp-mono);font-size:12px;color:var(--rp-muted)">—</span></td>
+          <td>DevOps</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-family:var(--rp-mono);font-size:13px;font-weight:600;color:var(--rp-muted)" class="pulse">…</span>
+            </div>
+          </td>
+          <td><span class="badge badge-blue"><span class="badge-dot"></span>Processing</span></td>
+          <td style="font-size:12px;color:var(--rp-muted)">13 Jul 2026</td>
+          <td><button class="btn btn-outline btn-sm" style="opacity:0.4" disabled>View →</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: WIDGET PREVIEW                                    -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-widget">
+  <div class="section-header" style="margin-bottom:28px">
+    <div>
+      <div class="section-title" style="font-size:22px">Widget Preview</div>
+      <div class="section-sub">How <code style="font-family:var(--rp-mono);font-size:12px;color:var(--rp-accent)">&lt;ResumeProof /&gt;</code> renders inside a client's site</div>
+    </div>
+    <button class="btn btn-outline" onclick="resetWidget()">↺ Reset Form</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">
+    <!-- LEFT: Widget states -->
+    <div>
+      <div class="inner-tabs" id="widget-tabs">
+        <div class="inner-tab active" onclick="setWidgetState('idle')">Idle</div>
+        <div class="inner-tab" onclick="setWidgetState('filled')">Filled</div>
+        <div class="inner-tab" onclick="setWidgetState('loading')">Submitting</div>
+        <div class="inner-tab" onclick="setWidgetState('success')">Success</div>
+        <div class="inner-tab" onclick="setWidgetState('error')">Error</div>
+      </div>
+
+      <!-- IDLE STATE -->
+      <div id="ws-idle" class="widget-shell">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="width:32px;height:32px;background:#5B6EF5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;">✓</div>
+          <div>
+            <div class="widget-title">Verify Your Resume</div>
+            <div class="widget-sub" style="margin-bottom:0">KRMC Placement Portal · Powered by ResumeProof</div>
+          </div>
+        </div>
+        <label class="widget-label">Resume PDF *</label>
+        <div class="widget-upload" id="widget-upload" onclick="simulatePDFUpload()">
+          <div style="font-size:28px;margin-bottom:6px">📄</div>
+          <div style="font-size:13px;color:#374151;font-weight:500">Click to upload or drag & drop</div>
+          <div style="font-size:11px;color:#9CA3AF;margin-top:3px">PDF only · Max 5MB</div>
+        </div>
+        <label class="widget-label">GitHub Profile URL *</label>
+        <input class="widget-input" placeholder="https://github.com/username" id="w-github" />
+        <label class="widget-label">Job Description <span style="color:#9CA3AF;font-weight:400">(optional)</span></label>
+        <textarea class="widget-input" placeholder="Paste the JD here for skill alignment scoring…" style="min-height:72px;resize:none;" id="w-jd"></textarea>
+        <button class="widget-btn" onclick="setWidgetState('loading')">Submit for Verification</button>
+        <div class="widget-footer">Your data is encrypted. <a href="#">Privacy Policy</a> · <a href="#">ResumeProof</a></div>
+      </div>
+
+      <!-- FILLED STATE -->
+      <div id="ws-filled" class="widget-shell" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div style="width:32px;height:32px;background:#5B6EF5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;">✓</div>
+          <div>
+            <div class="widget-title">Verify Your Resume</div>
+            <div class="widget-sub" style="margin-bottom:0">KRMC Placement Portal · Powered by ResumeProof</div>
+          </div>
+        </div>
+        <label class="widget-label">Resume PDF *</label>
+        <div class="widget-upload" style="border-color:#5B6EF5;background:#F5F6FF">
+          <div style="font-size:28px;margin-bottom:6px">✅</div>
+          <div style="font-size:13px;color:#374151;font-weight:600">resume_arjun_mehra.pdf</div>
+          <div style="font-size:11px;color:#9CA3AF;margin-top:3px">2.4 MB · Click to replace</div>
+        </div>
+        <label class="widget-label">GitHub Profile URL *</label>
+        <input class="widget-input" value="https://github.com/arjun-mehra" style="border-color:#5B6EF5" />
+        <label class="widget-label">Job Description <span style="color:#9CA3AF;font-weight:400">(optional)</span></label>
+        <textarea class="widget-input" style="min-height:72px;resize:none;">Backend Engineer with Node.js, PostgreSQL, AWS experience. 2+ years preferred.</textarea>
+        <button class="widget-btn" onclick="setWidgetState('loading')">Submit for Verification</button>
+        <div class="widget-footer">Your data is encrypted. <a href="#">Privacy Policy</a> · <a href="#">ResumeProof</a></div>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div id="ws-loading" class="widget-shell" style="display:none;text-align:center;padding:40px 24px">
+        <div style="width:56px;height:56px;border:3px solid #E5E7EB;border-top-color:#5B6EF5;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px"></div>
+        <div style="font-size:16px;font-weight:600;color:#0D0D0F;margin-bottom:6px">Submitting…</div>
+        <div style="font-size:13px;color:#6B6B80" id="loading-step">Uploading resume…</div>
+        <div style="margin-top:20px;background:#F3F4F6;border-radius:8px;padding:12px;text-align:left">
+          <div class="timeline" style="padding-left:20px">
+            <div class="tl-item"><div class="tl-dot done" style="left:-20px;top:4px"></div><div class="tl-label" style="color:#0D0D0F;font-size:12px">PDF uploaded</div></div>
+            <div class="tl-item"><div class="tl-dot active" style="left:-20px;top:4px;background:#5B6EF5;border-color:#5B6EF5"></div><div class="tl-label" style="color:#0D0D0F;font-size:12px">Parsing resume text…</div></div>
+            <div class="tl-item"><div class="tl-dot" style="left:-20px;top:4px;background:#E5E7EB;border-color:#D1D5DB"></div><div class="tl-label" style="color:#9CA3AF;font-size:12px">GitHub verification</div></div>
+            <div class="tl-item" style="margin-bottom:0"><div class="tl-dot" style="left:-20px;top:4px;background:#E5E7EB;border-color:#D1D5DB"></div><div class="tl-label" style="color:#9CA3AF;font-size:12px">AI analysis</div></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#9CA3AF;margin-top:16px">This takes 30–60 seconds. You'll get a confirmation email.</div>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div id="ws-success" class="widget-shell" style="display:none;text-align:center;padding:32px 24px">
+        <div style="width:64px;height:64px;background:#DCFCE7;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px">✅</div>
+        <div style="font-size:18px;font-weight:700;color:#0D0D0F;margin-bottom:6px">Submitted!</div>
+        <div style="font-size:13px;color:#6B6B80;margin-bottom:20px">Your resume is being verified. Results will be shared with KRMC Placement Portal.</div>
+        <div style="background:#F9FAFB;border:1.5px solid #E5E7EB;border-radius:8px;padding:14px;text-align:left;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Tracking ID</div>
+          <div style="font-family:monospace;font-size:13px;color:#5B6EF5">RPV-2026-07-13-A4X9</div>
+        </div>
+        <div style="font-size:12px;color:#9CA3AF">Expected completion: <strong style="color:#374151">~45 seconds</strong></div>
+        <div class="widget-footer" style="margin-top:20px">Powered by <a href="#">ResumeProof</a></div>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div id="ws-error" class="widget-shell" style="display:none">
+        <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:8px;padding:14px;margin-bottom:20px;display:flex;gap:10px">
+          <span style="font-size:16px">⚠️</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#DC2626">Submission failed</div>
+            <div style="font-size:12px;color:#EF4444;margin-top:2px">GitHub URL not accessible. Make sure your profile is public.</div>
+          </div>
+        </div>
+        <label class="widget-label">GitHub Profile URL *</label>
+        <input class="widget-input" value="https://github.com/arjun-private" style="border-color:#EF4444" />
+        <div style="font-size:11px;color:#EF4444;margin-top:-10px;margin-bottom:14px">⚠ Profile returned 404. Check the URL or set it to public.</div>
+        <button class="widget-btn" onclick="setWidgetState('filled')">Retry Submission</button>
+        <div class="widget-footer">Need help? <a href="#">Contact support</a></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Embed code + info -->
+    <div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="section-title" style="margin-bottom:4px;font-size:14px">npm install</div>
+        <div class="section-sub" style="margin-bottom:14px">Drop the widget into any React app in under 5 minutes</div>
+        <div class="code-block">
+<span class="code-comment">// 1. Install the package</span>
+<span class="code-fn">npm</span> install <span class="code-str">@resumeproof/widget</span>
+
+<span class="code-comment">// 2. Import and use</span>
+<span class="code-key">import</span> { <span class="code-fn">ResumeProof</span> } <span class="code-key">from</span> <span class="code-str">'@resumeproof/widget'</span>;
+
+<span class="code-key">export default function</span> <span class="code-fn">ApplyPage</span>() {
+  <span class="code-key">return</span> (
+    &lt;<span class="code-fn">ResumeProof</span>
+      <span class="code-key">apiKey</span>=<span class="code-str">"rp_live_xxxxxxxxxxxx"</span>
+      <span class="code-key">onVerified</span>={(result) => <span class="code-fn">handleResult</span>(result)}
+      <span class="code-key">onError</span>={(err) => <span class="code-fn">handleError</span>(err)}
+    /&gt;
+  );
+}
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div class="section-title" style="font-size:14px;margin-bottom:14px">Widget Props</div>
+        <table class="rp-table" style="font-size:12px">
+          <thead><tr><th>Prop</th><th>Type</th><th>Required</th></tr></thead>
+          <tbody>
+            <tr><td><code style="font-family:var(--rp-mono);color:var(--rp-accent)">apiKey</code></td><td>string</td><td><span class="badge badge-red">Yes</span></td></tr>
+            <tr><td><code style="font-family:var(--rp-mono);color:var(--rp-accent)">onVerified</code></td><td>function</td><td><span class="badge badge-red">Yes</span></td></tr>
+            <tr><td><code style="font-family:var(--rp-mono);color:var(--rp-accent)">onError</code></td><td>function</td><td><span class="badge badge-amber">Recommended</span></td></tr>
+            <tr><td><code style="font-family:var(--rp-mono);color:var(--rp-accent)">webhookMode</code></td><td>boolean</td><td><span class="badge badge-blue">Optional</span></td></tr>
+            <tr><td><code style="font-family:var(--rp-mono);color:var(--rp-accent)">theme</code></td><td>'light'|'dark'</td><td><span class="badge badge-blue">Optional</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:14px;margin-bottom:14px">Webhook Payload (to your backend)</div>
+        <div class="code-block" style="font-size:11px">
+{
+  <span class="code-key">"transactionId"</span>: <span class="code-str">"RPV-2026-07-13-A4X9"</span>,
+  <span class="code-key">"status"</span>: <span class="code-str">"verified"</span>,
+  <span class="code-key">"confidenceScore"</span>: <span class="code-str">91</span>,
+  <span class="code-key">"github"</span>: {
+    <span class="code-key">"reposFound"</span>: <span class="code-str">12</span>,
+    <span class="code-key">"claimedProjects"</span>: <span class="code-str">4</span>,
+    <span class="code-key">"verified"</span>: <span class="code-str">4</span>,
+    <span class="code-key">"commitAuthorship"</span>: <span class="code-str">true</span>
+  },
+  <span class="code-key">"flags"</span>: [],
+  <span class="code-key">"skillAlignment"</span>: <span class="code-str">87</span>
+}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: RESULTS                                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-results">
+  <div class="section-header" style="margin-bottom:24px">
+    <div>
+      <button class="btn btn-outline btn-sm" style="margin-bottom:10px" onclick="showPage('dashboard')">← Back</button>
+      <div class="section-title" style="font-size:22px">Arjun Mehra — Verification Report</div>
+      <div class="section-sub">Submitted 12 Jul 2026 · Completed in 38s · Job: Backend Engineer</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline" onclick="showToast('📋 Report link copied to clipboard')">Share</button>
+      <button class="btn btn-primary" onclick="showToast('✅ Candidate shortlisted!')">Shortlist</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start">
+    <!-- LEFT SIDEBAR -->
+    <div>
+      <div class="card" style="text-align:center;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:500;color:var(--rp-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px">Confidence Score</div>
+        <div style="display:flex;justify-content:center;margin-bottom:16px">
+          <div class="score-ring-wrap">
+            <svg width="96" height="96" viewBox="0 0 96 96">
+              <circle cx="48" cy="48" r="40" fill="none" stroke="var(--rp-border)" stroke-width="8"/>
+              <circle cx="48" cy="48" r="40" fill="none" stroke="var(--rp-green)" stroke-width="8"
+                stroke-dasharray="251.3" stroke-dashoffset="22.6" stroke-linecap="round"/>
+            </svg>
+            <div class="score-number" style="color:var(--rp-green)">91</div>
+          </div>
+        </div>
+        <span class="badge badge-green" style="font-size:12px;padding:4px 14px"><span class="badge-dot"></span>Verified</span>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:500;color:var(--rp-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px">Sub-scores</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>GitHub Authenticity</span><span style="font-family:var(--rp-mono);color:var(--rp-green)">96%</span></div>
+            <div class="prog-bar"><div class="prog-fill prog-green" style="width:96%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Project Existence</span><span style="font-family:var(--rp-mono);color:var(--rp-green)">100%</span></div>
+            <div class="prog-bar"><div class="prog-fill prog-green" style="width:100%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Skill–JD Alignment</span><span style="font-family:var(--rp-mono);color:var(--rp-accent)">87%</span></div>
+            <div class="prog-bar"><div class="prog-fill prog-blue" style="width:87%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Commit Authorship</span><span style="font-family:var(--rp-mono);color:var(--rp-green)">94%</span></div>
+            <div class="prog-bar"><div class="prog-fill prog-green" style="width:94%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-sm">
+        <div style="font-size:11px;font-weight:500;color:var(--rp-muted);text-transform:uppercase;margin-bottom:10px">Candidate Info</div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--rp-muted)">Email</span><span>arjun.mehra@iit.ac.in</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--rp-muted)">GitHub</span><span style="color:var(--rp-accent)">arjun-gh</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--rp-muted)">Repos</span><span>12 public</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--rp-muted)">Oldest commit</span><span>Jun 2022</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT MAIN -->
+    <div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="section-title" style="font-size:14px;margin-bottom:16px">Project Verification</div>
+        <table class="rp-table">
+          <thead><tr><th>Project (Resume)</th><th>GitHub Repo</th><th>Commits</th><th>Last Active</th><th>Match</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div style="font-weight:500">TaskFlow API</div><div style="font-size:11px;color:var(--rp-muted)">Node.js + PostgreSQL</div></td>
+              <td><code style="font-family:var(--rp-mono);font-size:11px;color:var(--rp-accent)">arjun-gh/taskflow-api</code></td>
+              <td style="font-family:var(--rp-mono)">147</td>
+              <td style="font-size:12px;color:var(--rp-muted)">Apr 2026</td>
+              <td><span class="badge badge-green">✓ Author</span></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500">Expense Tracker</div><div style="font-size:11px;color:var(--rp-muted)">React + Firebase</div></td>
+              <td><code style="font-family:var(--rp-mono);font-size:11px;color:var(--rp-accent)">arjun-gh/expense-web</code></td>
+              <td style="font-family:var(--rp-mono)">89</td>
+              <td style="font-size:12px;color:var(--rp-muted)">Jan 2026</td>
+              <td><span class="badge badge-green">✓ Author</span></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500">CLI DevTool</div><div style="font-size:11px;color:var(--rp-muted)">Python</div></td>
+              <td><code style="font-family:var(--rp-mono);font-size:11px;color:var(--rp-accent)">arjun-gh/cli-devtool</code></td>
+              <td style="font-family:var(--rp-mono)">34</td>
+              <td style="font-size:12px;color:var(--rp-muted)">Nov 2025</td>
+              <td><span class="badge badge-green">✓ Author</span></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500">ML Pipeline</div><div style="font-size:11px;color:var(--rp-muted)">Python + sklearn</div></td>
+              <td><code style="font-family:var(--rp-mono);font-size:11px;color:var(--rp-accent)">arjun-gh/ml-pipe</code></td>
+              <td style="font-family:var(--rp-mono)">21</td>
+              <td style="font-size:12px;color:var(--rp-muted)">Sep 2025</td>
+              <td><span class="badge badge-green">✓ Author</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div class="section-title" style="font-size:14px;margin-bottom:16px">Flags & Observations</div>
+        <div class="flag-item" style="border-color:rgba(34,197,94,0.2);background:rgba(34,197,94,0.04)">
+          <div class="flag-icon">✅</div>
+          <div><div class="flag-title">Consistent commit history since June 2022</div><div class="flag-desc">Activity spans 4 years with no suspicious bulk-commit patterns. Commit timestamps distributed naturally across working hours (IST).</div></div>
+        </div>
+        <div class="flag-item" style="border-color:rgba(34,197,94,0.2);background:rgba(34,197,94,0.04)">
+          <div class="flag-icon">✅</div>
+          <div><div class="flag-title">All 4 claimed projects found and authorship confirmed</div><div class="flag-desc">Repos exist, are non-forked, and email matches git config on 3 of 4 repos.</div></div>
+        </div>
+        <div class="flag-item" style="border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.04)">
+          <div class="flag-icon">⚠️</div>
+          <div><div class="flag-title">ML Pipeline repo has limited commit depth</div><div class="flag-desc">Only 21 commits over 3 months. Not necessarily a red flag but JD mentions "2+ years ML experience" — gap worth probing.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:14px;margin-bottom:16px">Skill–JD Alignment (AI Analysis)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="card-sm" style="background:rgba(34,197,94,0.05);border-color:rgba(34,197,94,0.2)">
+            <div style="font-size:11px;font-weight:600;color:var(--rp-green);margin-bottom:8px">MATCHED SKILLS</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <span class="badge badge-green">Node.js</span>
+              <span class="badge badge-green">PostgreSQL</span>
+              <span class="badge badge-green">REST APIs</span>
+              <span class="badge badge-green">AWS basics</span>
+              <span class="badge badge-green">Git</span>
+            </div>
+          </div>
+          <div class="card-sm" style="background:rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.2)">
+            <div style="font-size:11px;font-weight:600;color:var(--rp-red);margin-bottom:8px">NOT FOUND IN REPOS</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <span class="badge badge-red">Kubernetes</span>
+              <span class="badge badge-red">GraphQL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: SETTINGS / API KEYS                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-settings">
+  <div class="section-header" style="margin-bottom:28px">
+    <div>
+      <div class="section-title" style="font-size:22px">API Keys & Configuration</div>
+      <div class="section-sub">Manage your integration credentials and webhook settings</div>
+    </div>
+    <button class="btn btn-primary" onclick="generateKey()">+ Generate New Key</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="section-title" style="font-size:14px;margin-bottom:16px">Active API Keys</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="card-sm">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span style="font-size:13px;font-weight:500">Production Key</span>
+              <span class="badge badge-green">Active</span>
+            </div>
+            <div class="apikey-row">
+              <div class="apikey-value" id="key-prod">rp_live_••••••••••••••••••••</div>
+              <button class="btn btn-outline btn-sm" onclick="revealKey('key-prod','rp_live_k9mX2qL8nR4vT7wY1zA3cP')">Show</button>
+              <button class="btn btn-outline btn-sm" onclick="showToast('📋 API key copied!')">Copy</button>
+            </div>
+            <div style="font-size:11px;color:var(--rp-muted);margin-top:8px">Created 1 Jun 2026 · 247 requests this month</div>
+          </div>
+          <div class="card-sm">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span style="font-size:13px;font-weight:500">Test Key</span>
+              <span class="badge badge-amber">Sandbox</span>
+            </div>
+            <div class="apikey-row">
+              <div class="apikey-value">rp_test_••••••••••••••••••••</div>
+              <button class="btn btn-outline btn-sm">Show</button>
+              <button class="btn btn-outline btn-sm" onclick="showToast('📋 Test key copied!')">Copy</button>
+            </div>
+            <div style="font-size:11px;color:var(--rp-muted);margin-top:8px">Created 1 Jun 2026 · Rate limited to 10 req/hr</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:14px;margin-bottom:16px">Webhook Settings</div>
+        <div style="margin-bottom:14px">
+          <label class="form-label">Webhook URL</label>
+          <input class="form-input" value="https://krmc-portal.edu/api/resumeproof/callback" />
+        </div>
+        <div style="margin-bottom:14px">
+          <label class="form-label">Secret (HMAC signing key)</label>
+          <div class="apikey-row">
+            <div class="apikey-value">whsec_••••••••••••••••••</div>
+            <button class="btn btn-outline btn-sm" onclick="showToast('📋 Secret copied!')">Copy</button>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between">
+          <button class="btn btn-outline" onclick="showToast('🔔 Test webhook sent — check your server logs')">Send Test Ping</button>
+          <button class="btn btn-primary" onclick="showToast('✅ Settings saved')">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="section-title" style="font-size:14px;margin-bottom:4px">Usage This Month</div>
+        <div class="section-sub" style="margin-bottom:16px">Free tier: 500 verifications/month</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+          <span>247 / 500 used</span>
+          <span style="font-family:var(--rp-mono);color:var(--rp-accent)">49.4%</span>
+        </div>
+        <div class="prog-bar" style="height:10px"><div class="prog-fill prog-blue" style="width:49.4%"></div></div>
+        <div style="font-size:11px;color:var(--rp-muted);margin-top:8px">Resets on 1 Aug 2026</div>
+        <div class="divider"></div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:12px">Upgrade for more</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="card-sm" style="text-align:center">
+            <div style="font-size:11px;color:var(--rp-muted);margin-bottom:4px">Starter</div>
+            <div style="font-family:var(--rp-mono);font-size:20px;font-weight:600;color:var(--rp-text)">$29<span style="font-size:12px;color:var(--rp-muted)">/mo</span></div>
+            <div style="font-size:11px;color:var(--rp-muted);margin-top:4px">2,000 verifications</div>
+            <button class="btn btn-outline btn-sm" style="margin-top:10px;width:100%" onclick="showToast('Redirecting to billing…')">Upgrade</button>
+          </div>
+          <div class="card-sm" style="text-align:center;border-color:var(--rp-accent)">
+            <div style="font-size:11px;color:var(--rp-accent);margin-bottom:4px">Pro ✨</div>
+            <div style="font-family:var(--rp-mono);font-size:20px;font-weight:600;color:var(--rp-text)">$99<span style="font-size:12px;color:var(--rp-muted)">/mo</span></div>
+            <div style="font-size:11px;color:var(--rp-muted);margin-top:4px">Unlimited + Webhooks</div>
+            <button class="btn btn-primary btn-sm" style="margin-top:10px;width:100%" onclick="showToast('Redirecting to billing…')">Upgrade</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:14px;margin-bottom:14px">Quick Reference</div>
+        <div class="code-block" style="font-size:11px">
+<span class="code-comment"># API Gateway</span>
+POST /api/v1/verify
+  x-api-key: rp_live_xxxxx
+  Content-Type: multipart/form-data
+
+<span class="code-comment"># Poll for result</span>
+GET /api/v1/verify/{transactionId}
+  x-api-key: rp_live_xxxxx
+
+<span class="code-comment"># Response 202 (async)</span>
+{ <span class="code-key">"transactionId"</span>: <span class="code-str">"RPV-xxx"</span>, <span class="code-key">"status"</span>: <span class="code-str">"processing"</span> }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: ARCHITECTURE FLOW                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-flow">
+  <div class="section-header" style="margin-bottom:28px">
+    <div>
+      <div class="section-title" style="font-size:22px">System Architecture</div>
+      <div class="section-sub">Request flow from widget submission to webhook delivery</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <!-- FLOW DIAGRAM -->
+    <div class="card">
+      <div class="section-title" style="font-size:14px;margin-bottom:20px">Request Lifecycle</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center">
+          <div class="flow-box" style="background:rgba(91,110,245,0.08);border-color:var(--rp-accent)">
+            <div style="font-size:16px;margin-bottom:4px">🖥️</div>
+            <div style="color:var(--rp-accent)">npm-widget</div>
+            <div style="font-size:10px;color:var(--rp-muted);margin-top:2px">React · Shadow DOM</div>
+          </div>
+          <div style="color:var(--rp-muted);font-size:11px;text-align:center">→<br><span style="font-size:10px">PDF+GH<br>+JD</span></div>
+          <div class="flow-box" style="background:rgba(91,110,245,0.08);border-color:var(--rp-accent)">
+            <div style="font-size:16px;margin-bottom:4px">🌐</div>
+            <div style="color:var(--rp-accent)">NGINX Gateway</div>
+            <div style="font-size:10px;color:var(--rp-muted);margin-top:2px">Auth · Rate limit · Proxy</div>
+          </div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+        <div class="flow-label">Auth OK · 202 Accepted (async)</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-box">
+          <div style="font-size:16px;margin-bottom:4px">⚙️</div>
+          <div>ms1-orchestrator</div>
+          <div style="font-size:10px;color:var(--rp-muted);margin-top:2px">Express · PDF parse · DB log · Enqueue</div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+        <div class="flow-label">BullMQ → Redis queue</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-box">
+          <div style="font-size:16px;margin-bottom:4px">🐍</div>
+          <div>ms2-verification</div>
+          <div style="font-size:10px;color:var(--rp-muted);margin-top:2px">FastAPI · GitHub API · AI Analysis</div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+        <div class="flow-label">Results written to DB</div>
+        <div class="flow-arrow">↓</div>
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center">
+          <div class="flow-box" style="background:rgba(34,197,94,0.05);border-color:rgba(34,197,94,0.3)">
+            <div style="font-size:16px;margin-bottom:4px">📡</div>
+            <div style="color:var(--rp-green)">Webhook</div>
+            <div style="font-size:10px;color:var(--rp-muted);margin-top:2px">Client backend notified</div>
+          </div>
+          <div style="color:var(--rp-muted);font-size:11px;text-align:center">or</div>
+          <div class="flow-box" style="background:rgba(34,197,94,0.05);border-color:rgba(34,197,94,0.3)">
+            <div style="font-size:16px;margin-bottom:4px">🔄</div>
+            <div style="color:var(--rp-green)">Polling</div>
+            <div style="font-size:10px;color:var(--rp-muted);margin-top:2px">Widget polls GET /verify/:id</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT DETAILS -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="section-title" style="font-size:14px;margin-bottom:14px">Tech Stack</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="card-sm" style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:13px;font-weight:500">npm-widget</div><div style="font-size:11px;color:var(--rp-muted)">React 18 · TypeScript · Vite · Shadow DOM</div></div>
+            <span class="badge badge-blue">Frontend</span>
+          </div>
+          <div class="card-sm" style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:13px;font-weight:500">NGINX</div><div style="font-size:11px;color:var(--rp-muted)">API Gateway · limit_req_zone · header auth</div></div>
+            <span class="badge badge-amber">Gateway</span>
+          </div>
+          <div class="card-sm" style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:13px;font-weight:500">ms1-orchestrator</div><div style="font-size:11px;color:var(--rp-muted)">Express · pdf-parse · BullMQ · Prisma</div></div>
+            <span class="badge badge-blue">Service</span>
+          </div>
+          <div class="card-sm" style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:13px;font-weight:500">ms2-verification</div><div style="font-size:11px;color:var(--rp-muted)">FastAPI · PyGithub · Groq AI · Redis</div></div>
+            <span class="badge badge-blue">Worker</span>
+          </div>
+          <div class="card-sm" style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:13px;font-weight:500">PostgreSQL + Redis</div><div style="font-size:11px;color:var(--rp-muted)">Persistence · Job queue · Rate state</div></div>
+            <span class="badge badge-green">Data</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:14px;margin-bottom:14px">Verification Steps (ms2)</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot done"></div><div class="tl-label">Dequeue job from Redis</div><div class="tl-meta">BullMQ consumer</div></div>
+          <div class="tl-item"><div class="tl-dot done"></div><div class="tl-label">GitHub user existence check</div><div class="tl-meta">GET /users/:username</div></div>
+          <div class="tl-item"><div class="tl-dot done"></div><div class="tl-label">Fetch all public repos</div><div class="tl-meta">GET /users/:username/repos</div></div>
+          <div class="tl-item"><div class="tl-dot done"></div><div class="tl-label">Match resume projects → repos</div><div class="tl-meta">Fuzzy name match + language check</div></div>
+          <div class="tl-item"><div class="tl-dot done"></div><div class="tl-label">Commit authorship check</div><div class="tl-meta">GET /repos/:owner/:repo/commits</div></div>
+          <div class="tl-item"><div class="tl-dot done"></div><div class="tl-label">AI skill–JD alignment</div><div class="tl-meta">Groq API · resume text vs JD</div></div>
+          <div class="tl-item" style="margin-bottom:0"><div class="tl-dot done"></div><div class="tl-label">Write result → DB + trigger webhook</div><div class="tl-meta">ms1 picks up and delivers</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:14px;margin-bottom:10px">Deployment (AWS Free Tier)</div>
+        <div style="font-size:12px;color:var(--rp-muted);line-height:1.7">
+          EC2 t2.micro (Ubuntu 24.04) ·&nbsp;
+          NGINX reverse proxy + SSL (Let's Encrypt) ·&nbsp;
+          PM2 for Express · Uvicorn for FastAPI ·&nbsp;
+          Redis on same instance ·&nbsp;
+          PostgreSQL on RDS free tier or local ·&nbsp;
+          GitHub Actions for CI/CD
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+// ── PAGE ROUTING ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const tabs = { dashboard: 0, widget: 1, results: 2, settings: 3, flow: 4 };
+  const allTabs = document.querySelectorAll('.nav-tab');
+  if (tabs[id] !== undefined) allTabs[tabs[id]].classList.add('active');
+}
+
+// ── WIDGET STATES ──
+function setWidgetState(state) {
+  ['idle','filled','loading','success','error'].forEach(s => {
+    const el = document.getElementById('ws-' + s);
+    if (el) el.style.display = 'none';
+  });
+  const el = document.getElementById('ws-' + state);
+  if (el) el.style.display = 'block';
+
+  // sync tabs
+  const tabMap = { idle: 0, filled: 1, loading: 2, success: 3, error: 4 };
+  document.querySelectorAll('#widget-tabs .inner-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === tabMap[state]);
+  });
+
+  // loading step animation
+  if (state === 'loading') {
+    const steps = ['Uploading resume…', 'Parsing PDF text…', 'Connecting to GitHub…', 'Running AI analysis…', 'Finalising report…'];
+    let i = 0;
+    const stepEl = document.getElementById('loading-step');
+    const interval = setInterval(() => {
+      if (i >= steps.length) { clearInterval(interval); return; }
+      if (stepEl) stepEl.textContent = steps[i++];
+    }, 1400);
+    setTimeout(() => setWidgetState('success'), 8000);
+  }
+}
+
+function resetWidget() { setWidgetState('idle'); }
+
+function simulatePDFUpload() {
+  const zone = document.getElementById('widget-upload');
+  zone.innerHTML = '<div style="font-size:24px;margin-bottom:6px">📄</div><div style="font-size:13px;color:#374151;font-weight:600">resume_sample.pdf</div><div style="font-size:11px;color:#9CA3AF;margin-top:3px">2.1 MB · Click to replace</div>';
+  zone.style.borderColor = '#5B6EF5';
+  zone.style.background = '#F5F6FF';
+}
+
+// ── API KEY REVEAL ──
+function revealKey(elId, value) {
+  const el = document.getElementById(elId);
+  if (el) {
+    el.textContent = value;
+    el.style.color = 'var(--rp-text)';
+    setTimeout(() => { el.textContent = el.textContent.slice(0, 8) + '••••••••••••••'; el.style.color = 'var(--rp-muted)'; }, 5000);
+  }
+}
+
+// ── GENERATE KEY ──
+function generateKey() {
+  const rand = () => Math.random().toString(36).substring(2, 10).toUpperCase();
+  showToast('🔑 New key generated: rp_live_' + rand() + rand() + '… (shown once — copy it now)');
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── DRAG/DROP UX on upload zone ──
+const wUpload = document.getElementById('widget-upload');
+if (wUpload) {
+  wUpload.addEventListener('dragover', e => { e.preventDefault(); wUpload.classList.add('drag'); });
+  wUpload.addEventListener('dragleave', () => wUpload.classList.remove('drag'));
+  wUpload.addEventListener('drop', e => { e.preventDefault(); wUpload.classList.remove('drag'); simulatePDFUpload(); });
+}
+
+// Auto-animate progress bars after small delay
+setTimeout(() => {
+  document.querySelectorAll('.prog-fill').forEach(el => {
+    const w = el.style.width;
+    el.style.width = '0';
+    requestAnimationFrame(() => { setTimeout(() => { el.style.width = w; }, 100); });
+  });
+}, 300);
+</script>
+</body>
+</html>
